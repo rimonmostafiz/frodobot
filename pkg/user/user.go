@@ -55,7 +55,7 @@ func GetUserToRemind(userMap map[string]bool) ([]string, int) {
 	count := 0
 	userToRemind := make([]string, 100, 200)
 
-	for key, _ := range userMap {
+	for key := range userMap {
 		userId := key
 		if isTrue, ok := userMap[userId]; ok && !isTrue {
 			userToRemind[count] = key
