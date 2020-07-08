@@ -1,4 +1,5 @@
-package conversation
+// Package convo contains all the function related to conversion
+package convo
 
 import (
 	"github.com/slack-go/slack"
@@ -7,13 +8,16 @@ import (
 	"time"
 )
 
+// Values for oldest conversion time calculation
 var (
 	year, month, day     = time.Now().Date()
 	hour, min, sec, nsec = 06, 00, 00, 000
-	today                = time.Date(year, month, day-1, hour, min, sec, nsec, time.Now().Location())
+	today                = time.Date(year, month, day, hour, min, sec, nsec, time.Now().Location())
 	todayUnix            = strconv.FormatInt(today.Unix(), 10)
 )
 
+// GetConversationsHistory returns slice of slack.Message for a given channel
+// As a param we send channelId and Oldest time of the message to consider
 func GetConversationsHistory(channelId string, client *slack.Client) []slack.Message {
 	historyParam := slack.GetConversationHistoryParameters{
 		ChannelID: channelId,
