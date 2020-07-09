@@ -53,14 +53,23 @@ func MarkUserAsGreen(messages []slack.Message, userMap map[string]bool) {
 // Returns slice of userId with count
 func GetUserToRemind(userMap map[string]bool) ([]string, int) {
 	count := 0
-	userToRemind := make([]string, 100, 200)
+	var userToRemind []string
 
 	for key := range userMap {
 		userId := key
 		if isTrue, ok := userMap[userId]; ok && !isTrue {
-			userToRemind[count] = key
+			userToRemind = append(userToRemind, key)
 			count++
 		}
 	}
 	return userToRemind, count
+}
+
+// GerUserDetails finds user info by userId
+func GetUserDetails(userId string, client *slack.Client) *slack.User {
+	info, err := client.GetUserInfo(userId)
+	if err != nil {
+		log.Fatalf("error while get user info userId[%s], %s", userId, err)
+	}
+	return info
 }

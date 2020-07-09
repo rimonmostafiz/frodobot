@@ -22,6 +22,18 @@ func main() {
 	messages := convo.GetConversationsHistory(channelId, slackClient)
 	user.MarkUserAsGreen(messages, userMap)
 	userToRemind, count := user.GetUserToRemind(userMap)
+	fmt.Println(count)
 
-	fmt.Println(userToRemind, count)
+	userListString := ""
+
+	for _, userId := range userToRemind {
+		if userListString != "" {
+			userListString += ", "
+		}
+		details := user.GetUserDetails(userId, slackClient)
+		userListString += "@" + details.Name
+	}
+
+	remindMessage := "Hello " + userListString + " just to remind you. You need to post your status before 10:45 AM."
+	fmt.Println(remindMessage)
 }
