@@ -41,3 +41,13 @@ func GetConversationsHistory(channelId string, client *slack.Client) []slack.Mes
 	}
 	return history.Messages
 }
+
+// SendReminder send message to a channel
+func SendReminder(channelId string, message string, client *slack.Client) {
+	msgOpt := slack.MsgOptionText(message, false)
+	options := []slack.MsgOption{msgOpt}
+	_, _, err := client.PostMessage(channelId, options...)
+	if err != nil {
+		log.Fatalf("Error while sending message to channel[%s], %s", channelId, err)
+	}
+}

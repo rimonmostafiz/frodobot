@@ -13,6 +13,7 @@ func main() {
 
 	token := cfg.ReadFromEnv("SLACK_TOKEN")
 	channelId := cfg.ReadFromEnv("CHANNEL_ID")
+	testChannelId := cfg.ReadFromEnv("TEST_CHANNEL_ID")
 	excludeUserMap := cfg.ReadStringMapFromEnv("EXCLUDE_USER_VALUES")
 
 	slackClient := slack.New(token)
@@ -25,15 +26,15 @@ func main() {
 	fmt.Println(count)
 
 	userListString := ""
-
 	for _, userId := range userToRemind {
 		if userListString != "" {
 			userListString += ", "
 		}
 		details := user.GetUserDetails(userId, slackClient)
-		userListString += "@" + details.Name
+		userListString += "<@" + details.Name + ">"
 	}
 
 	remindMessage := "Hello " + userListString + " just to remind you. You need to post your status before 10:45 AM."
 	fmt.Println(remindMessage)
+	convo.SendReminder(testChannelId, remindMessage, slackClient)
 }
