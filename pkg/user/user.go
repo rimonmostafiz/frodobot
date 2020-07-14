@@ -4,6 +4,7 @@ package user
 import (
 	"github.com/slack-go/slack"
 	"log"
+	"sync"
 )
 
 // GetUserList generate list of user of a channel
@@ -49,20 +50,21 @@ func MarkUserAsGreen(messages []slack.Message, userMap map[string]bool) {
 }
 
 // GetUserToRemind search on userMap and construct a slice of user id
-// Who didn't provide their status today and need to get a reminder
-// Returns slice of userId with count
-func GetUserToRemind(userMap map[string]bool) ([]string, int) {
+// Then use getUserNames function and return usernames with count
+// usernames contains name of users, who didn't provide their status today and need to get a reminder
+func GetUserToRemind(userMap map[string]bool, client *slack.Client) ([]string, int) {
 	count := 0
-	var userToRemind []string
+	var userIds []string
 
 	for key := range userMap {
 		userId := key
 		if isTrue, ok := userMap[userId]; ok && !isTrue {
-			userToRemind = append(userToRemind, key)
+			userIds = append(userIds, key)
 			count++
 		}
 	}
-	return userToRemind, count
+	usernames := getUserNames(count, userIds, client)
+	return usernames, count
 }
 
 // GerUserDetails finds user info by userId
@@ -72,4 +74,21 @@ func GetUserDetails(userId string, client *slack.Client) *slack.User {
 		log.Fatalf("error while get user info userId[%s], %s", userId, err)
 	}
 	return info
+}
+
+// getUserNames fetch user name from userId list asynchronously using goroutines
+func getUserNames(count int, userIds []string, slackClient *slack.Client) []string {
+	userNames := make([]string, count)
+	var wg sync.WaitGroup
+	wg.Add(count)
+	for idx, userId := range userIds {
+		i, id := idx, userId
+		go func() {
+			details := GetUserDetails(id, slackClient)
+			userNames[i] = details.Name
+			wg.Done()
+		}()
+	}
+	wg.Wait()
+	return userNames
 }

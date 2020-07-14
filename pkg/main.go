@@ -15,26 +15,17 @@ func main() {
 	channelId := cfg.ReadFromEnv("CHANNEL_ID")
 	testChannelId := cfg.ReadFromEnv("TEST_CHANNEL_ID")
 	excludeUserMap := cfg.ReadStringMapFromEnv("EXCLUDE_USER_VALUES")
-
 	slackClient := slack.New(token)
 
 	users := user.GetUserList(channelId, slackClient)
 	userMap := user.InitUserMap(users, excludeUserMap)
 	messages := convo.GetConversationsHistory(channelId, slackClient)
 	user.MarkUserAsGreen(messages, userMap)
-	userToRemind, count := user.GetUserToRemind(userMap)
-	fmt.Println(count)
+	usernames, count := user.GetUserToRemind(userMap, slackClient)
 
-	userListString := ""
-	for _, userId := range userToRemind {
-		if userListString != "" {
-			userListString += ", "
-		}
-		details := user.GetUserDetails(userId, slackClient)
-		userListString += "<@" + details.Name + ">"
-	}
+	fmt.Println("User to remind:", count)
 
-	remindMessage := "Hello " + userListString + " just to remind you. You need to post your status before 10:45 AM."
-	fmt.Println(remindMessage)
-	convo.SendReminder(testChannelId, remindMessage, slackClient)
+	msg := convo.ConstructReminderMsg(usernames)
+	fmt.Println(msg)
+	convo.SendReminder(testChannelId, msg, slackClient)
 }

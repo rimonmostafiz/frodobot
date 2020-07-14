@@ -42,12 +42,24 @@ func GetConversationsHistory(channelId string, client *slack.Client) []slack.Mes
 	return history.Messages
 }
 
+// ConstructReminderMsg prepare final message to send for reminder
+func ConstructReminderMsg(usernames []string) string {
+	remindMessageBody := ""
+	for _, usr := range usernames {
+		if remindMessageBody != "" {
+			remindMessageBody += ", "
+		}
+		remindMessageBody += "<@" + usr + ">"
+	}
+	return "Hello " + remindMessageBody + " just to remind you. You need to post your status before 10:45 AM."
+}
+
 // SendReminder send message to a channel
-func SendReminder(channelId string, message string, client *slack.Client) {
-	msgOpt := slack.MsgOptionText(message, false)
-	options := []slack.MsgOption{msgOpt}
+func SendReminder(channelId string, msg string, client *slack.Client) {
+	msgOption := slack.MsgOptionText(msg, false)
+	options := []slack.MsgOption{msgOption}
 	_, _, err := client.PostMessage(channelId, options...)
 	if err != nil {
-		log.Fatalf("Error while sending message to channel[%s], %s", channelId, err)
+		log.Fatalf("Error while sending msg to channel[%s], %s", channelId, err)
 	}
 }
