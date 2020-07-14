@@ -46,12 +46,9 @@ func GetConversationsHistory(channelId string, client *slack.Client) []slack.Mes
 func ConstructReminderMsg(usernames []string) string {
 	remindMessageBody := ""
 	for _, usr := range usernames {
-		if remindMessageBody != "" {
-			remindMessageBody += ", "
-		}
-		remindMessageBody += "<@" + usr + ">"
+		remindMessageBody += "<@" + usr + ">, "
 	}
-	return "Hello " + remindMessageBody + " just to remind you. You need to post your status before 10:45 AM."
+	return "Hello " + remindMessageBody + "just to remind you, you need to post your updates before 10:45 AM."
 }
 
 // SendReminder send message to a channel
