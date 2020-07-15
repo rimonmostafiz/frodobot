@@ -25,7 +25,9 @@ func main() {
 
 	fmt.Println("User to remind:", count)
 
-	msg := convo.ConstructReminderMsg(usernames)
-	fmt.Println(msg)
-	convo.SendReminder(testChannelId, msg, slackClient)
+	if count > 0 {
+		msg := convo.ConstructReminderMsg(usernames)
+		fmt.Println(msg)
+		convo.SendReminder(testChannelId, msg, slackClient)
+	}
 }
