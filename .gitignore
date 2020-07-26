@@ -17,3 +17,6 @@
 
 # Eviorment Varibale File
 .env
+
+logs
+*.log
