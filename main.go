@@ -15,12 +15,11 @@ import (
 
 var (
 	InfoLogger *log.Logger
-	ErrLogger  *log.Logger
 )
 
 func main() {
 	initLogger()
-	InfoLogger.Printf("Strat Flott Bot Application")
+	InfoLogger.Printf("Flott Bot Application Start...")
 	c := cron.New()
 	cfg.InitViper(".env")
 
@@ -31,10 +30,7 @@ func main() {
 	slackClient := slack.New(token)
 
 	_, _ = c.AddFunc("45 10 * * 0-4", func() {
-		now := time.Now()
-		sec := now.Unix()
-		nSec := now.UnixNano()
-		InfoLogger.Printf("Cron Started at %v", time.Unix(sec, nSec))
+		InfoLogger.Printf("Cron Started at %v", time.Now().Format("01-Jan-2020 10:45:00"))
 		users := user.GetUserList(channelId, slackClient)
 		userMap := user.InitUserMap(users, excludeUserMap)
 		messages := convo.GetConversationsHistory(channelId, slackClient)
@@ -48,6 +44,7 @@ func main() {
 			InfoLogger.Println(msg)
 			convo.SendReminder(channelId, msg, slackClient)
 		}
+		InfoLogger.Printf("Cron Ended at %v", time.Now().Format("01-Jan-2020 10:45:00"))
 	})
 
 	c.Start()
@@ -61,5 +58,4 @@ func initLogger() {
 	}
 	mw := io.MultiWriter(os.Stdout, file)
 	InfoLogger = log.New(mw, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
-	ErrLogger = log.New(mw, "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile)
 }
