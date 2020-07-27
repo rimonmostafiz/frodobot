@@ -32,6 +32,7 @@ CHANNEL_ID=G******X
 EXCLUDE_USER_VALUES="{\"U******1\":\"x\",\"U******2\":\"x\"}"
 ```
 `.env` file should contain this 3 key
+
 - SLACK_TOKEN - your OAuth token
 - CHANNEL_ID - channel where you want to post the reminder message
 - EXCLUDE_USER_VALUES - a map with `userId` as key and `x` as value, while sending message bot will not mention those users.
