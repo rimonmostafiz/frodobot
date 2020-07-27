@@ -1,4 +1,4 @@
-module github.com/rimonmsotafiz/flott-bot
+module github.com/rimonmsotafiz/frodobot
 
 go 1.14
 

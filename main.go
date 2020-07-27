@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/rimonmsotafiz/flott-bot/pkg/cfg"
-	"github.com/rimonmsotafiz/flott-bot/pkg/convo"
-	"github.com/rimonmsotafiz/flott-bot/pkg/user"
+	"github.com/rimonmsotafiz/frodobot/pkg/cfg"
+	"github.com/rimonmsotafiz/frodobot/pkg/convo"
+	"github.com/rimonmsotafiz/frodobot/pkg/user"
 	"github.com/robfig/cron/v3"
 	"github.com/slack-go/slack"
 	"io"
@@ -13,13 +13,14 @@ import (
 	"time"
 )
 
+// InfoLogger for writing info log
 var (
 	InfoLogger *log.Logger
 )
 
 func main() {
 	initLogger()
-	InfoLogger.Printf("Flott Bot Application Start...")
+	InfoLogger.Printf("FrodoBot Application Start...")
 	c := cron.New()
 	cfg.InitViper(".env")
 
@@ -52,7 +53,7 @@ func main() {
 }
 
 func initLogger() {
-	file, err := os.OpenFile("flott-bot.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	file, err := os.OpenFile("frodobot.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		log.Fatalf("error opening file: %v", err)
 	}

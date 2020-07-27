@@ -67,7 +67,7 @@ func GetUserToRemind(userMap map[string]bool, client *slack.Client) ([]string, i
 	return usernames, count
 }
 
-// GerUserDetails finds user info by userId
+// GetUserDetails finds user info by userId
 func GetUserDetails(userId string, client *slack.Client) *slack.User {
 	info, err := client.GetUserInfo(userId)
 	if err != nil {
