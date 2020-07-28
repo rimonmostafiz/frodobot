@@ -10,7 +10,6 @@ import (
 	"io"
 	"log"
 	"os"
-	"time"
 )
 
 // InfoLogger for writing info log
@@ -31,7 +30,7 @@ func main() {
 	slackClient := slack.New(token)
 
 	_, _ = c.AddFunc("45 10 * * 0-4", func() {
-		InfoLogger.Printf("Cron Started at %v", time.Now().Format("01-Jan-2020 10:45:00"))
+		InfoLogger.Printf("FrodoBot Cron Started")
 		users := user.GetUserList(channelId, slackClient)
 		userMap := user.InitUserMap(users, excludeUserMap)
 		messages := convo.GetConversationsHistory(channelId, slackClient)
@@ -45,7 +44,7 @@ func main() {
 			InfoLogger.Println(msg)
 			convo.SendReminder(channelId, msg, slackClient)
 		}
-		InfoLogger.Printf("Cron Ended at %v", time.Now().Format("01-Jan-2020 10:45:00"))
+		InfoLogger.Printf("FrodoBot Cron Ended")
 	})
 
 	c.Start()
